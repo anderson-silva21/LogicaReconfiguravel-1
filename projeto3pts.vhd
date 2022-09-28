@@ -16,6 +16,8 @@ end projeto ;
 architecture logic of projeto is										--implementações do projeto; descreve as relações entre as portas.{
     --signal saida: STD_LOGIC_VECTOR(7 DOWNTO 0);							--objeto da arquitetura; saida do tipo vetor logico de 7 a 0 (8bits)
     signal saida: std_logic_vector(7 downto 0);
+    signal saidafourbits: std_logic_vector(3 downto 0);
+    signal aux: std_logic;
     signal cont : integer:=0;
     signal negativo : boolean;
     signal led : boolean;
@@ -48,30 +50,32 @@ architecture logic of projeto is										--implementações do projeto; descrev
                 when 2 =>--op and
                     dsp5 <= "10001000";			--exibe operacao no display 1
                     dsp4 <= "10001100";	
-                    saida <= entrada1 and entrada2;
+                    saidafourbits <= entrada1 and entrada2;
                     led <= true;
                 
                 when 3 =>--op or
                     dsp5 <= "11000000";			--exibe operacao no display 1
                     dsp4 <= "11100000";
-                    saida <= entrada1 or entrada2;
+                    saidafourbits <= entrada1 or entrada2;
                     led <= true;
                 
                 when 4 =>--op xor
                     dsp5 <= "11101000";			--exibe operacao no display 1
                     dsp4 <= "11000000";
-                    saida <= entrada 1 xor entrada2;
+                    saidafourbits <= entrada1 xor entrada2;
                     led <= true;
 
                 when 5 => --complemento
                     dsp5 <= "11101000";			--arrumar disp					--exibe operacao no display 1
                     dsp4 <= "11000000";
-                    if entrada1 = "1000" then
-                        entrada1 <= "0111";
-                        saida <= entrada1 + 1;
-                    elsif entrada1 = "1001" then
-                        entrada1 <= "0110";
-                        saida <= entrada1 + 1;
+                    tmp <= std_logic_vector((not entrada1) + 1);
+                    alias aux is tmp(0);
+                    if aux = '0' then
+                        saidafourbits <= entrada1;
+                    else
+                        tmp(0) <= '0';
+                        saidafourbits <= tmp;
+                    end if;
 
         if(resultado = '1') then
             if negativo then 
@@ -79,39 +83,39 @@ architecture logic of projeto is										--implementações do projeto; descrev
             end if;
             ---op logicas-----------------------------------------------------
             if led then
-                if saida = "0000" then
+                if saidafourbits = "0000" then
                     saidalog <= "0000";
-                elsif saida = "0001" then	
+                elsif saidafourbits = "0001" then	
                     saidalog <= "0001";
-                elsif saida = "0010" then				 
+                elsif saidafourbits = "0010" then				 
                     saidalog <= "0010";
-                elsif saida = "0011" then				 
+                elsif saidafourbits = "0011" then				 
                     saidalog <= "0011";
-                elsif saida = "0100" then				 
+                elsif saidafourbits = "0100" then				 
                     saidalog <= "0100";
                 ---05-------------------------------------------------------------------
-                elsif saida = "0101" then				 
+                elsif saidafourbits = "0101" then				 
                     saidalog <= "0101";
-                elsif saida = "0110" then				 
+                elsif saidafourbits = "0110" then				 
                     saidalog <= "0110";
-                elsif saida = "0111" then				 
+                elsif saidafourbits = "0111" then				 
                     saidalog <= "0111";
-                elsif saida = "1000" then				 
+                elsif saidafourbits = "1000" then				 
                     saidalog <= "1000";
-                elsif saida = "1001" then				 
+                elsif saidafourbits = "1001" then				 
                     saidalog <= "1001";
                 --10---------------------------------------------------------------------
-                elsif saida = "1010" then				 
+                elsif saidafourbits = "1010" then				 
                     saidalog <= "1010";
-                elsif saida = "1011" then				 
+                elsif saidafourbits = "1011" then				 
                     saidalog <= "1011";
-                elsif saida = "1100" then				 
+                elsif saidafourbits = "1100" then				 
                     saidalog <= "1100";
-                elsif saida = "1101" then				 
+                elsif saidafourbits = "1101" then				 
                     saidalog <= "1101";
-                elsif saida = "1110" then				 
+                elsif saidafourbits = "1110" then				 
                     saidalog <= "1110";
-                elsif saida = "1111" then
+                elsif saidafourbits = "1111" then
                     saidalog <= "1111";
                 end if
             ---op aritmeticas-----------------------------------------------------
